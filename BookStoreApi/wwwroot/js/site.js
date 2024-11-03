@@ -104,46 +104,39 @@ function _displayItems(data) {
     const button = document.createElement('button');
 
     data.forEach(item => {
-        let isCompleteCheckbox = document.createElement('input');
-        isCompleteCheckbox.type = 'checkbox';
-        isCompleteCheckbox.disabled = true;
-
 
         let editButton = button.cloneNode(false);
         editButton.innerText = 'Edit';
-        editButton.setAttribute('onclick', `displayEditForm(${item.id})`);
+        editButton.addEventListener('click', () => displayEditForm(item.id));
 
         let deleteButton = button.cloneNode(false);
         deleteButton.innerText = 'Delete';
-        deleteButton.setAttribute('onclick', `deleteItem(${item.id})`);
+        deleteButton.addEventListener('click', () => deleteItem(item.id));
 
         let tr = tBody.insertRow();
 
         let td1 = tr.insertCell(0);
-        td1.appendChild(isCompleteCheckbox);
+        let textNode = document.createTextNode(item.name);
+        td1.appendChild(textNode);
 
         let td2 = tr.insertCell(1);
-        let textNode = document.createTextNode(item.Name);
-        td2.appendChild(textNode);
+        let textNode2 = document.createTextNode(item.price);
+        td2.appendChild(textNode2);
 
         let td3 = tr.insertCell(2);
-        let textNode2 = document.createTextNode(item.price);
-        td3.appendChild(textNode2);
+        let textNode3 = document.createTextNode(item.category);
+        td3.appendChild(textNode3);
 
         let td4 = tr.insertCell(3);
-        let textNode3 = document.createTextNode(item.category);
-        td4.appendChild(textNode3);
+        let textNode4 = document.createTextNode(item.author);
+        td4.appendChild(textNode4);
+
 
         let td5 = tr.insertCell(4);
-        let textNode4 = document.createTextNode(item.author);
-        td5.appendChild(textNode4);
-
+        td5.appendChild(editButton);
 
         let td6 = tr.insertCell(5);
-        td6.appendChild(editButton);
-
-        let td7 = tr.insertCell(6);
-        td7.appendChild(deleteButton);
+        td6.appendChild(deleteButton);
     });
 
     books = data;

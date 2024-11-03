@@ -11,7 +11,7 @@ public class Book
     public string? Id { get; set; }
 
     [BsonElement("Name")]
-    [JsonPropertyName("Name")]
+    [JsonPropertyName("name")]
     public string BookName { get; set; } = null!;
 
     public decimal Price { get; set; }
@@ -19,4 +19,6 @@ public class Book
     public string Category { get; set; } = null!;
 
     public string Author { get; set; } = null!;
+
+    public string? Secret { get; set; } = null!;
 }
