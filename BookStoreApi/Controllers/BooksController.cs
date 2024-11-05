@@ -2,6 +2,7 @@
 using BookStoreApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace BookStoreApi.Controllers;
 
 [ApiController]
@@ -13,12 +14,24 @@ public class BooksController : ControllerBase
     public BooksController(BooksService booksService) =>
         _booksService = booksService;
 
-    [HttpGet]
-    public async Task<List<Book>> Get() =>
-        await _booksService.GetAsync();
 
+
+    //DTO APPLIED
+    [HttpGet]
+    public async Task<List<BookItemDTO>> Get()
+    {
+        var books = await _booksService.GetAsync();
+
+        return books.Select(book => new BookItemDTO(book)).ToList();
+    }
+
+
+
+
+
+    //DTO APPLIED
     [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<Book>> Get(string id)
+    public async Task<ActionResult<BookItemDTO>> Get(string id)
     {
         var book = await _booksService.GetAsync(id);
 
@@ -26,20 +39,43 @@ public class BooksController : ControllerBase
         {
             return NotFound();
         }
-
-        return book;
+        return new BookItemDTO(book);
     }
 
+
+
+
+
+
+
+    //DTO applied
     [HttpPost]
-    public async Task<IActionResult> Post(Book newBook)
+    public async Task<IActionResult> Post(BookItemDTO newBook)
     {
-        await _booksService.CreateAsync(newBook);
 
-        return CreatedAtAction(nameof(Get), new { id = newBook.Id }, newBook);
+        var book = new Book
+        {
+            BookName = newBook.BookName,
+            Price = newBook.Price,
+            Category = newBook.Category,
+            Author = newBook.Author
+        };
+        await _booksService.CreateAsync(book);
+
+        return CreatedAtAction(nameof(Get), new { id = book.Id }, new BookItemDTO(book) );
     }
+
+
+
+
+
+
+
+
+    //DTO applied
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Book updatedBook)
+    public async Task<IActionResult> Update(string id, BookItemDTO bookDTO)
     {
         var book = await _booksService.GetAsync(id);
 
@@ -48,13 +84,24 @@ public class BooksController : ControllerBase
             return NotFound();
         }
 
-        updatedBook.Id = book.Id;
+        var bookUpdate = new Book
+        {
+            Id = book.Id,
+            BookName = bookDTO.BookName,
+            Price = bookDTO.Price,
+            Category = bookDTO.Category,
+            Author = bookDTO.Author
+        };
 
-        await _booksService.UpdateAsync(id, updatedBook);
+        await _booksService.UpdateAsync(id, bookUpdate);
 
         return NoContent();
     }
 
+
+
+
+    // no need for dto
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {

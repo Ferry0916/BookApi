@@ -20,5 +20,5 @@ public class Book
 
     public string Author { get; set; } = null!;
 
-    public string? Secret { get; set; } = null!;
+    public string? Secret { get; set; }
 }
